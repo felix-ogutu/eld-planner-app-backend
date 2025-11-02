@@ -148,11 +148,7 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS Settings
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:5173",
-    "https://eld-planner-app-frontend1.vercel.app"
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Media files for ELD logs
 import os
