@@ -1,15 +1,23 @@
+{
+  "version": 2,
+  "builds": [
     {
-      "version": 2,
-      "builds": [
-        {
-          "src": "eld_planner_trip/wsgi.py",
-          "use": "@vercel/python"
-        }
-      ],
-      "routes": [
-        {
-          "src": "/(.*)",
-          "dest": "eld_planner_trip/wsgi.py"
-        }
-      ]
+      "src": "eld_planner_trip/wsgi.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "staticfiles_build/static/**",
+      "use": "@vercel/static"
     }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "staticfiles_build/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "eld_planner_trip/wsgi.py"
+    }
+  ]
+}

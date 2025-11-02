@@ -28,7 +28,8 @@ SECRET_KEY = 'django-insecure-%9&&^qx%idfv26^h6orb&=9tdefq%ua$i%!r=jw%31(tst9hf#
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "https://vercel.com/"
+    '.vercel.app',
+    'https://eld-planner-app-frontend1.vercel.app'
 
 ]
 
