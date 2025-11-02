@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
+from django.utils.deprecation import MiddlewareMixin
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -34,7 +36,14 @@ ALLOWED_HOSTS = [
 if os.getenv("VERCEL_URL"):
     ALLOWED_HOSTS.append(os.getenv("VERCEL_URL").replace("https://", ""))
 
-
+class ForceCorsMiddleware(MiddlewareMixin):
+    def process_response(self, request, response):
+        # Always add CORS headers for your frontend
+        response['Access-Control-Allow-Origin'] = 'https://eld-planner-app-frontend1.vercel.app'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        response['Access-Control-Allow-Credentials'] = 'true'
+        return response
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,6 +63,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+'eld_planner_trip.settings.ForceCorsMiddleware',  # ← NEW
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
