@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+from django.conf.global_settings import STATICFILES_STORAGE
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,9 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%9&&^qx%idfv26^h6orb&=9tdefq%ua$i%!r=jw%31(tst9hf#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "https://vercel.com/"
+
+]
 
 
 # Application definition
@@ -41,7 +46,8 @@ INSTALLED_APPS = [
     #Added apps
     'rest_framework',
     'corsheaders',
-    'trip'
+    'trip',
+    'whitenoise.runserver_nostatic'
 
 ]
 
@@ -54,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'eld_planner_trip.urls'
@@ -77,13 +84,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'eld_planner_trip.wsgi.application'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.mysql',
     }
 }
 
@@ -133,6 +141,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
+    "https://eld-planner-app-frontend1.vercel.app"
 ]
 
 # Media files for ELD logs
@@ -146,3 +155,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ],
 }
+
+STATICFILES_STORAGE=[
+    'django.contrib.staticfiles.storage.StaticFilesStorage',
+]

@@ -1,0 +1,15 @@
+    {
+      "version": 2,
+      "builds": [
+        {
+          "src": "eld_planner_trip/wsgi.py",
+          "use": "@vercel/python"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "eld_planner_trip/wsgi.py"
+        }
+      ]
+    }
