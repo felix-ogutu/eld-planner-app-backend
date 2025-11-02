@@ -2,22 +2,31 @@
   "version": 2,
   "builds": [
     {
-      "src": "eld_planner_trip/wsgi.py",
-      "use": "@vercel/python"
+      "src": "api/index.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "50mb" }
     },
     {
-      "src": "staticfiles_build/static/**",
+      "src": "staticfiles/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "staticfiles_build/static/$1"
+      "dest": "/staticfiles/$1"
+    },
+    {
+      "src": "/media/(.*)",
+      "dest": "/api/index.py"
     },
     {
       "src": "/(.*)",
-      "dest": "eld_planner_trip/wsgi.py"
+      "dest": "/api/index.py"
     }
-  ]
+  ],
+  "env": {
+    "DJANGO_SETTINGS_MODULE": "eld_planner_trip.settings",
+    "PYTHONUNBUFFERED": "true"
+  }
 }
