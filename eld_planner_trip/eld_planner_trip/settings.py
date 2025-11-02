@@ -11,8 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
-from django.conf.global_settings import STATICFILES_STORAGE
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,16 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%9&&^qx%idfv26^h6orb&=9tdefq%ua$i%!r=jw%31(tst9hf#'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-for-local-dev-only")
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
 ALLOWED_HOSTS = [
-    '.vercel.app',
-    'https://eld-planner-app-frontend1.vercel.app'
-
+    "localhost",
+    "127.0.0.1",
+    ".vercel.app",          # <-- all Vercel sub-domains
 ]
+if os.getenv("VERCEL_URL"):
+    ALLOWED_HOSTS.append(os.getenv("VERCEL_URL").replace("https://", ""))
 
 
 # Application definition
@@ -47,8 +48,7 @@ INSTALLED_APPS = [
     #Added apps
     'rest_framework',
     'corsheaders',
-    'trip',
-    'whitenoise.runserver_nostatic'
+    'trip'
 
 ]
 
@@ -61,7 +61,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'eld_planner_trip.urls'
@@ -85,18 +84,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'eld_planner_trip.wsgi.application'
 
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.mysql',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 }
 
-
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")   # <-- collectstatic target
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -131,7 +130,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -147,16 +146,10 @@ CORS_ALLOWED_ORIGINS = [
 
 # Media files for ELD logs
 import os
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = "/tmp/media"
+os.makedirs(MEDIA_ROOT, exist_ok=True)
 
 # REST Framework
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-    ],
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
 }
-
-STATICFILES_STORAGE=[
-    'django.contrib.staticfiles.storage.StaticFilesStorage',
-]

@@ -20,3 +20,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+if os.getenv("VERCEL"):
+    # Vercel dev runs the function directly – avoid the "manage.py" CLI
+    import sys
+    sys.exit(0)
